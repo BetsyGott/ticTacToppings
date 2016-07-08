@@ -344,4 +344,9 @@ div.button-reset {
         transform: translateX(-50%);
         z-index: 9999;
     }
+
+    .game-cell {
+        width: 2.4em;
+        height: 2.4em;
+    }
 }
