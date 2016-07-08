@@ -2,8 +2,6 @@ function Game(){
     var self = this;
     self.canClick = true;
     self.playCount = 0;
-    self.player1 = null;
-    self.player2 = null;
     self.winArray = [
         [0,1,2],
         [3, 4, 5],
@@ -15,120 +13,115 @@ function Game(){
         [2,4,6]
     ];
     
-    self.gameState = localStorage.getItem("gameState");
+    self.gameState = self.initGameState();
 
-    if(!self.gameState){
-        self.gameState = {
-            boardState: [null, null, null, null, null, null, null, null, null],
-            currentPlayer: self.player1
-        };
-    } else{
-        self.gameState = JSON.parse(self.gameState);
-    }
+    //these need to be set to the gameState object initially
+    self.player1 = null;
+    self.player2 = null;
     
-    self.mushroomPiece = {
-        name: "mushroom",
-        image: "assets/images/piece_mushroom.png"
+    self.mushroomPiece = new Piece(this, "mushroom", "assets/images/piece_mushroom.png", "mushroom_cursor");
+    self.pepperPiece = new Piece(this, "greenPepper", "assets/images/piece_green_pepper.png", "greenpepper_cursor");
+    self.pepperoniPiece = new Piece(this, "pepperoni", "assets/images/piece_pepperoni.png", "pepperoni_cursor");
+    
+    self.resetGame = function(){
+        self.playCount = 0;
+        //remove localStorage item
+        localStorage.removeItem("gameState");
+
+        self.gameState.boardState = [null, null, null, null, null, null, null, null, null];
+
+        $(".game-cell").each(function(){
+            $(this).html("");
+        });
+
+        $("#player-board").find("h3").remove();
+
+        $("#game-board").removeClass("pepperoni_cursor");
+        $("#game-board").removeClass("mushroom_cursor");
+        $("#game-board").removeClass("greenpepper_cursor");
+
+        self.gameState.currentPlayer.setCursor();
+
+        $("#game-reset").hide();
     };
-    self.pepperPiece = {
-            name: "greenPepper",
-            image: "assets/images/piece_green_pepper.png"
-        };
-    self.pepperoniPiece = {
-            name: "pepperoni",
-            image: "assets/images/piece_pepperoni.png"
-        };
+    
+    self.initGameState = function(){
+        var initialGameState = localStorage.getItem("gameState");
+
+        if(initialGameState){
+            initialGameState = {
+                boardState: [null, null, null, null, null, null, null, null, null],
+                currentPlayer: self.player1
+            };
+        } else{
+            initialGameState = JSON.parse(initialGameState);
+        }
+        
+        return initialGameState;
+    };
     
 }
 
-function Player(name, piece){
+function Piece(parent, name, image, cursor){
+    this.parent = parent;
+    this.name = name;
+    this.image = image;
+    this.cursor = cursor;
+}
+
+function Player(parent, name, piece){
+    this.parent = parent;
     this.name = name;
     this.piece = piece;
-}
-
-function checkWin(playerPiece){
-    var playerArray = [];
-    for(var i=0; i < gameState.boardState.length; i++){
-        //loop through gameState array for existing img srcs
-        if(gameState.boardState[i] === playerPiece.piece.image){
-            // if there is a src match push that index to playerArray
-            playerArray.push(i);
-        }
-    }
-    for (i = 0; i < winArray.length; i++) {
-        //enter into each item in winArray
-        isWinner = true;
-        //isWinner will be set to false whenever a subArray does not meet win condition
-        for (var j = 0; j < winArray[i].length; j++) {
-            //check each item in subArrays of winArray
-            if(playerArray.indexOf(winArray[i][j])===-1){
-                //if subArray[j] is not in playerArray, not a winner
-                isWinner = false;
-                break;
+    
+    this.checkWin = function(){
+        var playerArray = [];
+        for(var i=0; i < parent.gameState.boardState.length; i++){
+            //loop through gameState array for existing img srcs
+            if(parent.gameState.boardState[i] === this.piece.image){
+                // if there is a src match push that index to playerArray
+                playerArray.push(i);
             }
         }
-        //check if isWinner is true, if so, there was a win condition, current player wins
-        if(isWinner === true){
-            canClick = false;
-            var $h3WinMessage = $("<h3>"+ playerPiece.name + " wins!" + "</h3>");
-            $("#player-board").append($h3WinMessage);
+        for (i = 0; i < parent.winArray.length; i++) {
+            //enter into each item in winArray
+            var isWinner = true;
+            //isWinner will be set to false whenever a subArray does not meet win condition
+            for (var j = 0; j < parent.winArray[i].length; j++) {
+                //check each item in subArrays of winArray
+                if(playerArray.indexOf(parent.winArray[i][j])===-1){
+                    //if subArray[j] is not in playerArray, not a winner
+                    isWinner = false;
+                    break;
+                }
+            }
+            //check if isWinner is true, if so, there was a win condition, current player wins
+            if(isWinner === true){
+                parent.canClick = false;
+                var $h3WinMessage = $("<h3>"+ this.name + " wins!" + "</h3>");
+                $("#player-board").append($h3WinMessage);
+                $("#game-reset").show();
+            }
+        }
+        if(parent.playCount === 9 && isWinner === false){
+            //if all cells have been filled and there's no winner, it's a tie
+            parent.canClick = false;
+            var $h3TieMessage = $("<h3>" + "game is a tie." + "</h3>");
+            $("#player-board").append($h3TieMessage);
             $("#game-reset").show();
         }
-    }
-    if(playCount === 9 && isWinner === false){
-        //if all cells have been filled and there's no winner, it's a tie
-        canClick = false;
-        var $h3TieMessage = $("<h3>" + "game is a tie." + "</h3>");
-        $("#player-board").append($h3TieMessage);
-        $("#game-reset").show();
-    }
-
-}
-
-function resetGame(){
+    };
     
-    playCount = 0;
-    //remove localStorage item
-    localStorage.removeItem("gameState");
-    
-    gameState.boardState = [null, null, null, null, null, null, null, null, null];
-    
-    $(".game-cell").each(function(){
-       $(this).html(""); 
-    });
-    
-    $("#player-board").find("h3").remove();
-    
-    $("#game-board").removeClass("pepperoni_cursor");
-    $("#game-board").removeClass("mushroom_cursor");
-    $("#game-board").removeClass("greenpepper_cursor");
-    
-    setCursor(gameState.currentPlayer);
-    
-    $("#game-reset").hide();
-
-}
-
-function setCursor(currentPlayer){
-    if(currentPlayer.piece.name === "pepperoni"){
-        console.log(currentPlayer.piece.name);
-        // remove mushroom and greenpepper, add pepperoni
+    this.setCursor = function(){
+        //remove all classes
         $("#game-board").removeClass("mushroom_cursor");
         $("#game-board").removeClass("greenpepper_cursor");
-        $("#game-board").addClass("pepperoni_cursor");
-    } else if(currentPlayer.piece.name === "mushroom"){
-        console.log(currentPlayer.piece.name);
-        //remove greenpepper and pepperoni, add mushroom
         $("#game-board").removeClass("pepperoni_cursor");
-        $("#game-board").removeClass("greenpepper_cursor");
-        $("#game-board").addClass("mushroom_cursor");
-    } else {
-        console.log(currentPlayer.piece.name);
-        //else green pepper cursor
-        $("#game-board").removeClass("pepperoni_cursor");
-        $("#game-board").removeClass("mushroom_cursor");
-        $("#game-board").addClass("greenpepper_cursor");
-    }
+        
+        //add player's cursor
+        $("#game-board").addClass(this.piece.cursor);
+    };
+    
 }
 
 $(document).ready(function(){
