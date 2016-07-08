@@ -11,37 +11,6 @@ body {
     height: 100vh;
     position: relative;
     overflow: hidden;
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*flex-direction: column;*/
-    /*align-items: center;*/
-    /*position: relative;*/
-}
-
-.form-board {
-    position: relative;
-    top: 15vw;
-    /* float: left; */
-    width: 25vw;
-    height: 100%;
-    /* left: 2%; */
-    /* padding-left: 9%; */
-    background: white;
-}
-
-.form-container {
-    display: none;
-    position: absolute;
-    left: 18%;
-    top: 32%;
-    text-align: center;
-    width: 60%;
-    color: #ffffff;
-    font-size: 120%;
-    background-image: url('assets/images/form_background.jpg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
 }
 
 .game-container {
@@ -50,17 +19,6 @@ body {
     position: absolute;
     left: 0;
     top: 17vh;
-}
-
-.form-input {
-    font-size: 110%;
-    width: 13vw;
-}
-
-.radio_img {
-    width: 26%;
-    vertical-align: middle;
-    padding: 3% 0;
 }
 
 .title-board {
@@ -249,3 +207,83 @@ div.button-reset {
 }
 
 /*end rainbow text css*/
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0, .5);
+}
+
+.form-container form {
+    width: 76%;
+    margin: 0 auto;
+    position: relative;
+    top: 130px;
+}
+
+.form-container {
+    /*display: none; */
+    z-index: 9999;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 60%;
+    height: 500px;
+    color: #ffffff;
+    font-size: 120%;
+    background-image: url('assets/images/form_background.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.form-title {
+    font-size: 1.7em;
+    margin: 0;
+}
+
+.name-field {
+    width: 80%;
+    height: 30px;
+    margin: 15px 0;
+    border: none;
+    border-radius: 5px;
+    padding: 0 7px;
+    text-align: center;
+    font-size: .8em;
+}
+
+.radio_img {
+    width: 23%;
+    vertical-align: middle;
+    padding: 3% 0;
+}
+
+.radio_img:hover {
+    background: rgba(255,255,255,0.5);
+    border-radius: 25%;
+}
+
+.radio-btn {
+    visibility: hidden;
+}
+
+.submit-btn {
+    border: 2px solid white;
+    padding: 15px;
+    border-radius: 15px;
+    width: 37%;
+    margin: 12px auto;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background: #eee;
+    border: 2px solid grey;
+    color: grey;
+}

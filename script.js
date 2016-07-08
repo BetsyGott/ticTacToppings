@@ -48,13 +48,15 @@ function Game(){
     };
     
     self.init = function(){
+
+        $(".new-game-box").hide();
+        //TODO hide player info boxes to start
         //TODO check if player1 and player2 are null and run the thing where they choose their piece and name if so
 
         //run function to have people choose players
         self.initPlayers();
-
-        //hide reset game button by default
-        $(".new-game-box").hide();
+        
+        //TODO show player info boxes after initPlayers
 
         self.currentPlayer = self.player1;
         //set cursor initially with player 1 
