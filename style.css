@@ -112,21 +112,34 @@ h1 {
     justify-content: center;
 }
 
-.button-reset {
-    font-family: inherit;
-    font-size: inherit;
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 2px solid black;
-    padding: 10px 20px;
+.new-game-box {
+    background: url(assets/images/pizza_box.png) no-repeat center center;
+    background-size: contain;
+    border: 0;
+    width: 300px;
+    height: 190px;
+    position: absolute;
+    top: 0;
+    right: 2%;
 }
 
-.button-reset:hover {
-    font-family: inherit;
-    font-size: inherit;
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 2px solid black;
-    padding: 10px 20px;
+div.button-reset {
+    position: relative;
+    width: 56%;
+    text-align: center;
+    top: 11%;
+    left: 18%;
+    font-size: 2em;
+    cursor:pointer;
 }
+
+/*.button-reset:hover {*/
+    /*font-family: inherit;*/
+    /*font-size: inherit;*/
+    /*background-color: rgba(255, 255, 255, 0.8);*/
+    /*border: 2px solid black;*/
+    /*padding: 10px 20px;*/
+/*}*/
 
 .game-board {
 
@@ -141,7 +154,7 @@ h1 {
     background-position: center;
     width: 65vw;
     height: 65vh;
-    animation: bounceIn 2s;
+    #animation: bounceIn 2s;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

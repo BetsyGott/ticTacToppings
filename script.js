@@ -3,6 +3,7 @@ function Game(){
     self.canClick = true;
     self.playCount = 0;
     self.currentPlayer = null;
+    self.boardState = [null, null, null, null, null, null, null, null, null];
     self.winArray = [
         [0,1,2],
         [3, 4, 5],
@@ -26,7 +27,7 @@ function Game(){
     self.resetGame = function(){
         self.playCount = 0;
 
-        self.gameState.boardState = [null, null, null, null, null, null, null, null, null];
+        self.boardState = [null, null, null, null, null, null, null, null, null];
 
         $(".game-cell").each(function(){
             $(this).html("");
@@ -40,7 +41,7 @@ function Game(){
 
         self.currentPlayer.setCursor();
 
-        $("#game-reset").hide();
+        $(".new-game-box").hide();
     };
     
     self.init = function(){
@@ -50,18 +51,18 @@ function Game(){
         self.initPlayers();
 
         //hide reset game button by default
-        $("#game-reset").hide();
+        $(".new-game-box").hide();
 
         self.currentPlayer = self.player1;
         //set cursor initially with player 1 
         self.currentPlayer.setCursor();
 
-        // $(".game-cell").on("click",function() {
-        //
-        //     self.handleBoardClick($(this));
-        // });
+        $(".game-cell").on("click",function() {
 
-        $("#game-reset").on("click", function(){
+            self.handleBoardClick($(this));
+        });
+
+        $(".new-game-box").on("click", function(){
 
             self.resetGame();
             self.canClick = true;
@@ -77,7 +78,9 @@ function Game(){
             
             self.player1 = new Player(this, "Player 1", self.mushroomPiece);
 
-        } else if(self.player1 && !self.player2){
+        }
+
+        if(!self.player2){
             
             self.player2 = new Player(this, "Player 2", self.pepperPiece);
 
@@ -86,21 +89,33 @@ function Game(){
     };
     
     self.handleBoardClick = function(element){
+
+
         if (self.canClick === true) {
 
             var $element = $(element);
+            var elId = $element.attr("id");
+            var boardId = elId.substr(elId.length-1, elId.length);
+            console.log("board id: ", boardId);
 
-            if($element.html() === null){
+            if(!self.boardState[boardId]){
+
+                self.boardState[boardId] = self.currentPlayer.piece.image;
+
                 var $img = $("<img>").attr("src", self.currentPlayer.piece.image);
+
                 $element.html($img);
 
                 self.playCount++;
                 
                 self.currentPlayer.checkWin();
+
                 // switch player to other player
-                if(self.currentPlayer.name === self.player1.name){
+                if(self.currentPlayer === self.player1){
+
                     self.currentPlayer = self.player2;
                     self.currentPlayer.setCursor();
+
                 }else {
                     self.currentPlayer = self.player1;
                     self.currentPlayer.setCursor();
@@ -125,23 +140,24 @@ function Player(parent, name, piece){
     this.piece = piece;
     
     this.checkWin = function(){
+        console.log("checking win");
         var playerArray = [];
 
-        $(".game-cell").each(function(){
-
-            if($(this).find("img").attr("src") === playerObj.piece.image){
-                playerArray.push($(this));
-            }
-
-        });
-
-        // for(var i=0; i < parent.boardState.length; i++){
-        //     //loop through gameState array for existing img srcs
-        //     if(parent.gameState.boardState[i] === this.piece.image){
-        //         // if there is a src match push that index to playerArray
-        //         playerArray.push(i);
+        // $(".game-cell").each(function(){
+        //
+        //     if($(this).find("img").attr("src") === playerObj.piece.image){
+        //         playerArray.push($(this));
         //     }
-        // }
+        //
+        // });
+
+        for(var i=0; i < this.parent.boardState.length; i++){
+            //loop through gameState array for existing img srcs
+            if(this.parent.boardState[i] === this.piece.image){
+                // if there is a src match push that index to playerArray
+                playerArray.push(i);
+            }
+        }
 
         for (i = 0; i < this.parent.winArray.length; i++) {
             //enter into each item in winArray
@@ -158,25 +174,31 @@ function Player(parent, name, piece){
             //check if isWinner is true, if so, there was a win condition, current player wins
             if(isWinner === true){
                 this.parent.canClick = false;
+                this.removeCursors();
                 var $h3WinMessage = $("<h3>"+ this.name + " wins!" + "</h3>");
                 $("#player-board").append($h3WinMessage);
-                $("#game-reset").show();
+                $(".new-game-box").show();
             }
         }
         if(this.parent.playCount === 9 && isWinner === false){
             //if all cells have been filled and there's no winner, it's a tie
             this.parent.canClick = false;
+            this.removeCursors();
             var $h3TieMessage = $("<h3>" + "game is a tie." + "</h3>");
             $("#player-board").append($h3TieMessage);
-            $("#game-reset").show();
+            $(".new-game-box").show();
         }
+    };
+
+    this.removeCursors = function() {
+        $("#game-board").removeClass("mushroom_cursor");
+        $("#game-board").removeClass("greenpepper_cursor");
+        $("#game-board").removeClass("pepperoni_cursor");
     };
     
     this.setCursor = function(){
         //remove all classes
-        $("#game-board").removeClass("mushroom_cursor");
-        $("#game-board").removeClass("greenpepper_cursor");
-        $("#game-board").removeClass("pepperoni_cursor");
+        this.removeCursors();
         
         //add player's cursor
         $("#game-board").addClass(this.piece.cursor);
@@ -191,9 +213,11 @@ $(document).ready(function(){
     //run game init function
     game.init();
 
-    $(".game-cell").click("click", function() {
 
-        game.handleBoardClick($(this));
-    });
+    //TODO troubleshoot click handler
+    // $(".game-cell").click("click", function() {
+    //
+    //     game.handleBoardClick($(this));
+    // });
     
 });
