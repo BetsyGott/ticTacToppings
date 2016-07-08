@@ -50,14 +50,7 @@ function Game(){
         
         //populates the board with localStorage saved values if there are any
         $(".game-cell").each(function(){
-            //get ID of cell div
-            var $id = $(this).attr("id");
-            var index = $id[$id.length-1];
-
-            if(self.gameState.boardState[index]){
-                var $img = $("<img>").attr("src", self.gameState.boardState[index]);
-                $(this).html($img);
-            }
+            self.initBoard($(this));
         });
         
         while(!self.player1 || !self.player2) {
@@ -73,6 +66,30 @@ function Game(){
 
         //set cursor initially with player 1 
         self.player1.setCursor();
+
+        $(".game-cell").on("click",function() {
+            
+            self.handleBoardClick($(this));
+        });
+
+        $("#game-reset").on("click", function(){
+
+            self.resetGame();
+            self.canClick = true;
+        });
+        
+    };
+    
+    self.initBoard = function(element){
+      var $element = $(element);
+        
+        var $id = $element.attr("id");
+        var index = $id[$id.length-1];
+
+        if(self.gameState.boardState[index]){
+            var $img = $("<img>").attr("src", self.gameState.boardState[index]);
+            $element.html($img);
+        }
     };
     
     self.initGameState = function(){
@@ -211,17 +228,6 @@ $(document).ready(function(){
     var game = new Game;
     
     //run game init function
-
+    game.init();
     
-    //run function to assign piece objects to player objects (run again on new game button click
-    $(".game-cell").on("click",function() {
-        game.handleBoardClick($(this));
-    });
-
-    //click handler for reset button
-    $("#game-reset").on("click",function(){
-
-        game.resetGame();
-        game.canClick = true;
-    });
 });
