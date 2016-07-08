@@ -279,3 +279,69 @@ div.button-reset {
 }
 
 /*TODO mobile breakpoint*/
+
+@media screen and (max-width: 768px) {
+    .new-game-box {
+        width: 150px;
+        height: 190px;
+    }
+
+    div.button-reset {
+        position: relative;
+        width: 40%;
+        top: 58px;
+        left: 42px;
+        font-size: 21px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+   h1 {
+       font-size: 250%;
+   }
+
+    .bounce-text {
+        display: block;
+    }
+
+    .player-container {
+        font-size: 10px;
+        width: 32%;
+    }
+
+    .player-container div {
+        width:45%;
+    }
+
+    .game-board {
+        width: 98vw;
+    }
+
+    .form-container {
+        width: 300px;
+        height: 460px;
+    }
+
+    .form-container form {
+        font-size: 12px;
+        width: 75%;
+
+    }
+
+    .submit-btn {
+        font-size: 18px;
+    }
+
+    .win-message {
+        font-size: 2.4em;
+    }
+
+    .new-game-box {
+        display: block;
+        position: absolute;
+        top: 300%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+    }
+}
