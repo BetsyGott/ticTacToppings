@@ -45,26 +45,23 @@ var canClick = true,
 
 function checkWin(playerPiece){
     var playerArray = [];
-    for(i=0; i < gameState.boardState.length; i++){
+    for(var i=0; i < gameState.boardState.length; i++){
         //loop through gameState array for existing img srcs
         if(gameState.boardState[i] === playerPiece.piece.image){
             // if there is a src match push that index to playerArray
             playerArray.push(i);
-            // console.log(playerArray);
         }
     }
     for (i = 0; i < winArray.length; i++) {
         //enter into each item in winArray
         isWinner = true;
         //isWinner will be set to false whenever a subArray does not meet win condition
-        for (j = 0; j < winArray[i].length; j++) {
+        for (var j = 0; j < winArray[i].length; j++) {
             //check each item in subArrays of winArray
             if(playerArray.indexOf(winArray[i][j])===-1){
                 //if subArray[j] is not in playerArray, not a winner
                 isWinner = false;
-                // console.log("isWinner inside 2nd for loop: " + isWinner);
                 break;
-                //break out of current subArray loop and move to next one
             }
         }
         //check if isWinner is true, if so, there was a win condition, current player wins
@@ -86,32 +83,25 @@ function checkWin(playerPiece){
 }
 
 function resetGame(){
-
-    //reset playCount
+    
     playCount = 0;
     //remove localStorage item
     localStorage.removeItem("gameState");
     
-    //reset boardState
     gameState.boardState = [null, null, null, null, null, null, null, null, null];
     
-    //reset board
     $(".game-cell").each(function(){
        $(this).html(""); 
     });
-
-    //reset win/tie messages
+    
     $("#player-board").find("h3").remove();
-
-    //reset cursors
+    
     $("#game-board").removeClass("pepperoni_cursor");
     $("#game-board").removeClass("mushroom_cursor");
     $("#game-board").removeClass("greenpepper_cursor");
-
-    //set cursor and player1 to currentPlayer in temp holder var
+    
     setCursor(gameState.currentPlayer);
-
-    //hide reset button
+    
     $("#game-reset").hide();
 
 }
@@ -158,7 +148,6 @@ $(document).ready(function(){
     checkWin(player2);
 
     //set cursor initially, with player 1 for now
-    console.log("initial cursor name " , gameState.currentPlayer.piece.name);
     setCursor(player1);
 
     //run function to assign piece objects to player objects (run again on new game button click
@@ -207,3 +196,5 @@ $(document).ready(function(){
         canClick = true;
     });
 });
+
+// TODO pizza game board set to right side of container right now, change to middle after player piece selection and board disappears
