@@ -16,8 +16,8 @@ function Game(){
     self.gameState = self.initGameState();
 
     //these need to be set to the gameState object initially
-    self.player1 = null;
-    self.player2 = null;
+    self.player1 = self.gameState.player1;
+    self.player2 = self.gameState.player2;
     
     self.mushroomPiece = new Piece(this, "mushroom", "assets/images/piece_mushroom.png", "mushroom_cursor");
     self.pepperPiece = new Piece(this, "greenPepper", "assets/images/piece_green_pepper.png", "greenpepper_cursor");
@@ -59,6 +59,10 @@ function Game(){
                 $(this).html($img);
             }
         });
+        
+        while(!self.player1 || !self.player2) {
+            self.initPlayers();
+        }
 
         //hide reset game button by default
         $("#game-reset").hide();
@@ -74,7 +78,7 @@ function Game(){
     self.initGameState = function(){
         var initialGameState = localStorage.getItem("gameState");
 
-        if(initialGameState){
+        if(!initialGameState){
             initialGameState = {
                 boardState: [null, null, null, null, null, null, null, null, null],
                 player1: self.player1,
@@ -89,8 +93,53 @@ function Game(){
     };
     
     self.initPlayers = function(){
-        //TODO init player function, check localStorage for existing players, else set null
-        var initialPlayers ;
+        if(!self.player1){
+            
+            self.player1 = new Player(this, "Player 1", self.mushroomPiece);
+            //update gamestate obj
+            self.gameState.player1 = self.player1;
+        } else if(self.player1 && !self.player2){
+            
+            self.player2 = new Player(this, "Player 2", self.pepperPiece);
+            //update gamestate obj
+            self.gameState.player2 = self.player2;
+        }
+
+    };
+    
+    self.handleBoardClick = function(element){
+        if (self.canClick === true) {
+
+            var $element = $(element);
+
+            var $id = $element.attr("id");
+
+            var index = $id[$id.length-1];
+
+            if(!self.gameState.boardState[index]) {
+                //if the html is empty
+                // create an image element with a src equal to current player's piece image
+
+                self.gameState.boardState[index] = self.gameState.currentPlayer.piece.image;
+
+                var $img = $("<img>").attr("src", self.gameState.boardState[index]);
+                
+                $element.html($img);
+               
+                self.playCount++;
+
+                self.gameState.currentPlayer.checkWin();
+                // switch player to other player
+                if(self.gameState.currentPlayer.name === self.player1.name){
+                    self.gameState.currentPlayer = self.player2;
+                    self.gameState.currentPlayer.setCursor();
+                }else {
+                    self.gameState.currentPlayer = self.player1;
+                    self.gameState.currentPlayer.setCursor();
+                }
+                localStorage.setItem("gameState", JSON.stringify(self.gameState));
+            }
+        }
     }
     
 }
@@ -166,47 +215,13 @@ $(document).ready(function(){
     
     //run function to assign piece objects to player objects (run again on new game button click
     $(".game-cell").on("click",function() {
-        if (canClick === true) {
-
-        var $this = $(this);
-
-        var $id = $this.attr("id");
-
-        var index = $id[$id.length-1];
-
-        if(!gameState.boardState[index]) {
-            //if the html is empty
-            // create an image element with a src equal to current player's piece image
-
-            gameState.boardState[index] = gameState.currentPlayer.piece.image;
-
-            var $img = $("<img>").attr("src", gameState.boardState[index]);
-
-            //insert it into the cell clicked on
-            $this.html($img);
-            //update play count
-            playCount++;
-            // check for win
-            checkWin(gameState.currentPlayer);
-            // switch player to other player
-            if(gameState.currentPlayer.name === player1.name){
-                gameState.currentPlayer = player2;
-                setCursor(gameState.currentPlayer);
-            }else {
-                gameState.currentPlayer = player1;
-                setCursor(gameState.currentPlayer);
-            }
-            localStorage.setItem("gameState", JSON.stringify(gameState));
-        }
-    }
+        game.handleBoardClick($(this));
     });
 
     //click handler for reset button
     $("#game-reset").on("click",function(){
 
-        resetGame();
-        canClick = true;
+        game.resetGame();
+        game.canClick = true;
     });
 });
-
-// TODO pizza game board set to right side of container right now, change to middle after player piece selection and board disappears
