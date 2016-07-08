@@ -79,13 +79,13 @@ function Game(){
         //TODO change this so players choose instead of assigning values here
         if(!self.player1){
             
-            self.player1 = new Player(this, "Player 1", self.mushroomPiece);
+            self.player1 = new Player(this, "Player 1", self.mushroomPiece, $("#player1-info"));
 
         }
 
         if(!self.player2){
             
-            self.player2 = new Player(this, "Player 2", self.pepperPiece);
+            self.player2 = new Player(this, "Player 2", self.pepperPiece, $("#player2-info"));
 
         }
 
@@ -136,11 +136,13 @@ function Piece(parent, name, image, cursor){
     this.cursor = cursor;
 }
 
-function Player(parent, name, piece){
+function Player(parent, name, piece, playerBoard){
     var playerObj = this;
     this.parent = parent;
     this.name = name;
     this.piece = piece;
+    this.playerBoard = playerBoard;
+    this.wins = 0;
     
     this.checkWin = function(){
         console.log("checking win");
@@ -179,6 +181,8 @@ function Player(parent, name, piece){
                 this.parent.canClick = false;
                 this.removeCursors();
                 var $h2WinMessage = $("<h2>"+ this.name + " wins!" + "</h2>");
+                this.wins++;
+                this.playerBoard.find(".wins").text(this.wins);
                 $h2WinMessage.addClass("rainbow");
                 $(".win-message").append($h2WinMessage);
                 $(".new-game-box").show();
