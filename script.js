@@ -21,7 +21,7 @@ function Game(){
     self.player2 = null;
     
     self.mushroomPiece = new Piece(this, "mushroom", "assets/images/piece_mushroom.png", "mushroom_cursor");
-    self.pepperPiece = new Piece(this, "greenPepper", "assets/images/piece_green_pepper.png", "greenpepper_cursor");
+    self.greenPepperPiece = new Piece(this, "greenPepper", "assets/images/piece_green_pepper.png", "greenpepper_cursor");
     self.pepperoniPiece = new Piece(this, "pepperoni", "assets/images/piece_pepperoni.png", "pepperoni_cursor");
     
     self.resetGame = function(){
@@ -33,8 +33,6 @@ function Game(){
             $(this).html("");
         });
 
-        //TODO uncomment hiding after testing
-        // $(".win-message").hide();
         $(".win-message").html("");
 
         self.currentPlayer.removeCursors;
@@ -46,10 +44,10 @@ function Game(){
     
     self.init = function(){
 
-        $(".new-game-box").hide();
+        var chosenPiece = null;
 
+        $(".new-game-box").hide();
         $(".player-container").hide();
-        //TODO check if player1 and player2 are null and run the thing where they choose their piece and name if so
 
         $(".overlay").show();
         $(".form-container").show();
@@ -58,34 +56,47 @@ function Game(){
         $("input[name=topping]").change(function(){
                 if($(this).is(':checked')){
 
-                    console.log("checked: ", $(this).val());
                     var value = $(this).val();
-                    console.log("value: ", value);
 
                         $(".radio-img").removeClass("selected-img");
                         $('#'+value).addClass("selected-img");
-
-
-
                 }
             });
 
             $("#submit").click(function(){
 
+                var checkedVal = $("input[name=topping]:checked").val();
+
                 if(!self.player1){
 
-                    self.player1 = self.createPlayerFromFormValues("Player 1", "mushroom", $("#player1-info"));
+                    if(!checkedVal){
+                        $(".warning").text("Please select a piece.");
+
+                        return false;
+                    }
+
+                    chosenPiece = $("input[name=topping]:checked").val();
+
+                    self.player1 = self.createPlayerFromFormValues("Player 1", $("#player1-info"));
 
                     $("#formTitle").text("Player 2");
 
-                    $("#name").val("");
-                    $("input:radio").attr("checked", false);
-                    $(".radio-img").removeClass("selected-img");
-
+                    self.resetForm();
 
                 } else {
-                    self.player2 = self.createPlayerFromFormValues("Player 2", "pepperoni", $("#player2-info"));
 
+                    if(!checkedVal){
+                        $(".warning").text("Please select a piece.");
+
+                        return false;
+                    }
+
+                    if($("input[name=topping]:checked").val() === chosenPiece){
+                        $(".warning").text("Please select a different piece.");
+                        return false;
+                    }
+
+                    self.player2 = self.createPlayerFromFormValues("Player 2", $("#player2-info"));
 
                     self.currentPlayer = self.player1;
                     //set cursor initially with player 1
@@ -95,7 +106,6 @@ function Game(){
                     $(".form-container").hide();
                     $(".player-container").show();
 
-                    console.log("player2: ", self.player2);
                 }
 
             });
@@ -114,11 +124,11 @@ function Game(){
         
     };
 
-    self.createPlayerFromFormValues = function(defaultName, defaultPiece, playerInfoBox){
+    self.createPlayerFromFormValues = function(defaultName, playerInfoBox){
 
             var name = $("#name").val() ? $("#name").val() : defaultName;
 
-            var pieceStr = $("input[name=topping]:checked").val() ? $("input[name=topping]:checked").val() : defaultPiece;
+            var pieceStr = $("input[name=topping]:checked").val();
 
             var pieceConcat = pieceStr + "Piece";
 
@@ -126,8 +136,17 @@ function Game(){
 
             var player = new Player(this, name, piece, playerInfoBox);
 
+            player.createBoard();
+
             return player;
 
+    };
+
+    self.resetForm = function(){
+        $("#name").val("");
+        $("input:radio").attr("checked", false);
+        $(".radio-img").removeClass("selected-img");
+        $(".warning").text("");
     };
 
     
@@ -146,7 +165,6 @@ function Game(){
             var $element = $(element);
             var elId = $element.attr("id");
             var boardId = elId.substr(elId.length-1, elId.length);
-            console.log("board id: ", boardId);
 
             if(!self.boardState[boardId]){
 
@@ -184,24 +202,24 @@ function Piece(parent, name, image, cursor){
 }
 
 function Player(parent, name, piece, playerBoard){
-    var playerObj = this;
     this.parent = parent;
     this.name = name;
     this.piece = piece;
     this.playerBoard = playerBoard;
     this.wins = 0;
+
+
+    this.createBoard = function(){
+        this.playerBoard.find(".player-name").text(this.name);
+        console.log("this piece:", this.piece);
+        this.playerBoard.find(".piece").html("<img src='"+this.piece.image+"'>");
+
+        return this.playerBoard;
+    };
     
     this.checkWin = function(){
-        console.log("checking win");
-        var playerArray = [];
 
-        // $(".game-cell").each(function(){
-        //
-        //     if($(this).find("img").attr("src") === playerObj.piece.image){
-        //         playerArray.push($(this));
-        //     }
-        //
-        // });
+        var playerArray = [];
 
         for(var i=0; i < this.parent.boardState.length; i++){
             //loop through gameState array for existing img srcs
@@ -212,12 +230,12 @@ function Player(parent, name, piece, playerBoard){
         }
 
         for (i = 0; i < this.parent.winArray.length; i++) {
-            //enter into each item in winArray
+
             var isWinner = true;
-            //isWinner will be set to false whenever a subArray does not meet win condition
+
             for (var j = 0; j < this.parent.winArray[i].length; j++) {
                 //check each item in subArrays of winArray
-                if(playerArray.indexOf(this.parent.winArray[i][j])===-1){
+                if(playerArray.indexOf(this.parent.winArray[i][j])=== -1){
                     //if subArray[j] is not in playerArray, not a winner
                     isWinner = false;
                     break;
@@ -235,8 +253,8 @@ function Player(parent, name, piece, playerBoard){
                 $(".new-game-box").show();
             }
         }
-        if(this.parent.playCount === 9 && isWinner === false){
-            //if all cells have been filled and there's no winner, it's a tie
+        if(this.parent.playCount === 9 && isWinner === false){//if all cells have been filled and there's no winner, it's a tie
+
             this.parent.canClick = false;
             this.removeCursors();
             var $h2TieMessage = $("<h2>" + "The game is a tie." + "</h2>");
@@ -253,7 +271,7 @@ function Player(parent, name, piece, playerBoard){
     };
     
     this.setCursor = function(){
-        //remove all classes
+        //remove all
         this.removeCursors();
         
         //add player's cursor
@@ -267,8 +285,7 @@ $(document).ready(function(){
     createBounce();
     
     var game = new Game;
-    
-    //run game init function
+
     game.init();
     
 });
