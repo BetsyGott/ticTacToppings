@@ -2,6 +2,7 @@ function Game(){
     var self = this;
     self.canClick = true;
     self.playCount = 0;
+    self.currentPlayer = null;
     self.winArray = [
         [0,1,2],
         [3, 4, 5],
@@ -12,12 +13,11 @@ function Game(){
         [0,4,8],
         [2,4,6]
     ];
-    
-    self.gameState = self.initGameState();
+
 
     //these need to be set to the gameState object initially
-    self.player1 = self.gameState.player1;
-    self.player2 = self.gameState.player2;
+    self.player1 = null;
+    self.player2 = null;
     
     self.mushroomPiece = new Piece(this, "mushroom", "assets/images/piece_mushroom.png", "mushroom_cursor");
     self.pepperPiece = new Piece(this, "greenPepper", "assets/images/piece_green_pepper.png", "greenpepper_cursor");
@@ -25,8 +25,6 @@ function Game(){
     
     self.resetGame = function(){
         self.playCount = 0;
-        //remove localStorage item
-        localStorage.removeItem("gameState");
 
         self.gameState.boardState = [null, null, null, null, null, null, null, null, null];
 
@@ -40,37 +38,28 @@ function Game(){
         $("#game-board").removeClass("mushroom_cursor");
         $("#game-board").removeClass("greenpepper_cursor");
 
-        self.gameState.currentPlayer.setCursor();
+        self.currentPlayer.setCursor();
 
         $("#game-reset").hide();
     };
     
     self.init = function(){
         //TODO check if player1 and player2 are null and run the thing where they choose their piece and name if so
-        
-        //populates the board with localStorage saved values if there are any
-        $(".game-cell").each(function(){
-            self.initBoard($(this));
-        });
-        
-        while(!self.player1 || !self.player2) {
-            self.initPlayers();
-        }
+
+        //run function to have people choose players
+        self.initPlayers();
 
         //hide reset game button by default
         $("#game-reset").hide();
-        
-        //check whether anyone has won (requires initializing players right away)
-        self.player1.checkWin();
-        self.player2.checkWin();
 
+        self.currentPlayer = self.player1;
         //set cursor initially with player 1 
-        self.player1.setCursor();
+        self.currentPlayer.setCursor();
 
-        $(".game-cell").on("click",function() {
-            
-            self.handleBoardClick($(this));
-        });
+        // $(".game-cell").on("click",function() {
+        //
+        //     self.handleBoardClick($(this));
+        // });
 
         $("#game-reset").on("click", function(){
 
@@ -79,47 +68,19 @@ function Game(){
         });
         
     };
-    
-    self.initBoard = function(element){
-      var $element = $(element);
-        
-        var $id = $element.attr("id");
-        var index = $id[$id.length-1];
 
-        if(self.gameState.boardState[index]){
-            var $img = $("<img>").attr("src", self.gameState.boardState[index]);
-            $element.html($img);
-        }
-    };
-    
-    self.initGameState = function(){
-        var initialGameState = localStorage.getItem("gameState");
-
-        if(!initialGameState){
-            initialGameState = {
-                boardState: [null, null, null, null, null, null, null, null, null],
-                player1: self.player1,
-                player2: self.player2,
-                currentPlayer: self.player1
-            };
-        } else{
-            initialGameState = JSON.parse(initialGameState);
-        }
-        
-        return initialGameState;
-    };
     
     self.initPlayers = function(){
+
+        //TODO change this so players choose instead of assigning values here
         if(!self.player1){
             
             self.player1 = new Player(this, "Player 1", self.mushroomPiece);
-            //update gamestate obj
-            self.gameState.player1 = self.player1;
+
         } else if(self.player1 && !self.player2){
             
             self.player2 = new Player(this, "Player 2", self.pepperPiece);
-            //update gamestate obj
-            self.gameState.player2 = self.player2;
+
         }
 
     };
@@ -129,32 +90,21 @@ function Game(){
 
             var $element = $(element);
 
-            var $id = $element.attr("id");
-
-            var index = $id[$id.length-1];
-
-            if(!self.gameState.boardState[index]) {
-                //if the html is empty
-                // create an image element with a src equal to current player's piece image
-
-                self.gameState.boardState[index] = self.gameState.currentPlayer.piece.image;
-
-                var $img = $("<img>").attr("src", self.gameState.boardState[index]);
-                
+            if($element.html() === null){
+                var $img = $("<img>").attr("src", self.currentPlayer.piece.image);
                 $element.html($img);
-               
-                self.playCount++;
 
-                self.gameState.currentPlayer.checkWin();
+                self.playCount++;
+                
+                self.currentPlayer.checkWin();
                 // switch player to other player
-                if(self.gameState.currentPlayer.name === self.player1.name){
-                    self.gameState.currentPlayer = self.player2;
-                    self.gameState.currentPlayer.setCursor();
+                if(self.currentPlayer.name === self.player1.name){
+                    self.currentPlayer = self.player2;
+                    self.currentPlayer.setCursor();
                 }else {
-                    self.gameState.currentPlayer = self.player1;
-                    self.gameState.currentPlayer.setCursor();
+                    self.currentPlayer = self.player1;
+                    self.currentPlayer.setCursor();
                 }
-                localStorage.setItem("gameState", JSON.stringify(self.gameState));
             }
         }
     }
@@ -169,26 +119,37 @@ function Piece(parent, name, image, cursor){
 }
 
 function Player(parent, name, piece){
+    var playerObj = this;
     this.parent = parent;
     this.name = name;
     this.piece = piece;
     
     this.checkWin = function(){
         var playerArray = [];
-        for(var i=0; i < parent.gameState.boardState.length; i++){
-            //loop through gameState array for existing img srcs
-            if(parent.gameState.boardState[i] === this.piece.image){
-                // if there is a src match push that index to playerArray
-                playerArray.push(i);
+
+        $(".game-cell").each(function(){
+
+            if($(this).find("img").attr("src") === playerObj.piece.image){
+                playerArray.push($(this));
             }
-        }
-        for (i = 0; i < parent.winArray.length; i++) {
+
+        });
+
+        // for(var i=0; i < parent.boardState.length; i++){
+        //     //loop through gameState array for existing img srcs
+        //     if(parent.gameState.boardState[i] === this.piece.image){
+        //         // if there is a src match push that index to playerArray
+        //         playerArray.push(i);
+        //     }
+        // }
+
+        for (i = 0; i < this.parent.winArray.length; i++) {
             //enter into each item in winArray
             var isWinner = true;
             //isWinner will be set to false whenever a subArray does not meet win condition
-            for (var j = 0; j < parent.winArray[i].length; j++) {
+            for (var j = 0; j < this.parent.winArray[i].length; j++) {
                 //check each item in subArrays of winArray
-                if(playerArray.indexOf(parent.winArray[i][j])===-1){
+                if(playerArray.indexOf(this.parent.winArray[i][j])===-1){
                     //if subArray[j] is not in playerArray, not a winner
                     isWinner = false;
                     break;
@@ -196,15 +157,15 @@ function Player(parent, name, piece){
             }
             //check if isWinner is true, if so, there was a win condition, current player wins
             if(isWinner === true){
-                parent.canClick = false;
+                this.parent.canClick = false;
                 var $h3WinMessage = $("<h3>"+ this.name + " wins!" + "</h3>");
                 $("#player-board").append($h3WinMessage);
                 $("#game-reset").show();
             }
         }
-        if(parent.playCount === 9 && isWinner === false){
+        if(this.parent.playCount === 9 && isWinner === false){
             //if all cells have been filled and there's no winner, it's a tie
-            parent.canClick = false;
+            this.parent.canClick = false;
             var $h3TieMessage = $("<h3>" + "game is a tie." + "</h3>");
             $("#player-board").append($h3TieMessage);
             $("#game-reset").show();
@@ -229,5 +190,10 @@ $(document).ready(function(){
     
     //run game init function
     game.init();
+
+    $(".game-cell").click("click", function() {
+
+        game.handleBoardClick($(this));
+    });
     
 });
