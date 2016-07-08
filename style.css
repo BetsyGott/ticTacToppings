@@ -217,15 +217,7 @@ div.button-reset {
     background: rgba(0,0,0, .5);
 }
 
-.form-container form {
-    width: 76%;
-    margin: 0 auto;
-    position: relative;
-    top: 130px;
-}
-
 .form-container {
-    /*display: none; */
     z-index: 9999;
     position: absolute;
     left: 50%;
@@ -240,6 +232,14 @@ div.button-reset {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
+}
+
+.form-container form {
+    width: 76%;
+    margin: 0 auto;
+    position: absolute;
+    top: 130px;
+    left: 50px;
 }
 
 .form-title {
@@ -258,19 +258,24 @@ div.button-reset {
     font-size: .8em;
 }
 
-.radio_img {
+.radio-img {
     width: 23%;
     vertical-align: middle;
     padding: 3% 0;
 }
 
-.radio_img:hover {
+.radio-img:hover {
     background: rgba(255,255,255,0.5);
     border-radius: 25%;
 }
 
 .radio-btn {
     visibility: hidden;
+}
+
+.selected-img{
+    background: rgba(255,255,255,0.5);
+    border-radius: 25%;
 }
 
 .submit-btn {

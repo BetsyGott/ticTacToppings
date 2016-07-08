@@ -67,48 +67,27 @@
     <div class="overlay">
     </div>
     <div class="form-container">
-        <form id="player1-form">
-            <label class="form-title" for="p1name">Player 1</label>
-            <input class="form-input name-field" id="p1name" type="text" name="name" placeholder="enter name">
+        <form id="player-form">
+            <label id="formTitle" class="form-title" for="name">Player 1</label>
+            <input class="form-input name-field" id="name" type="text" name="name" placeholder="enter name">
             <br>
             <p class="form-title">Choose your topping:</p>
             <label class="form-area">
                 <input type="radio" name="topping" value="pepperoni" class="radio-btn">
-                <img class="radio_img" src="assets/images/piece_pepperoni.png">
+                <img class="radio-img" id="pepperoni" src="assets/images/piece_pepperoni.png">
             </label>
 
             <label class="form-area">
                 <input type="radio" name="topping" value="mushroom" class="radio-btn">
-                <img class="radio_img" src="assets/images/piece_mushroom.png">
+                <img class="radio-img" id="mushroom" src="assets/images/piece_mushroom.png">
             </label>
 
             <label class="form-area">
                 <input type="radio" name="topping" value="greenpepper" class="radio-btn">
-                <img class="radio_img" src="assets/images/piece_green_pepper.png">
+                <img class="radio-img" id="greenpepper" src="assets/images/piece_green_pepper.png">
             </label>
             <br>
-            <div class="submit-btn">Submit</div>
-        </form>
-
-        <form id="player2-form">
-            <label class="form-title" for="p2name">Player 2</label>
-            <input class="form-input name-field" id="p2name" type="text" name="p2name" placeholder="enter name">
-            <br>
-            <p class="form-title">Choose your topping:</p>
-            <label class="form-area">
-                <input type="radio" name="topping" value="pepperoni" class="radio-btn">
-                    <img class="radio_img" src="assets/images/piece_pepperoni.png">
-            </label>
-            <label class="form-area">
-                <input type="radio" name="topping" value="mushroom" class="radio-btn">
-                    <img class="radio_img" src="assets/images/piece_mushroom.png">
-            </label>
-            <label class="form-area">
-                <input type="radio" name="topping" value="greenpepper" class="radio-btn">
-                    <img class="radio_img" src="assets/images/piece_green_pepper.png">
-            </label>
-            <br>
-            <div class="submit-btn">Submit</div>
+            <div class="submit-btn" id="submit">Submit</div>
         </form>
     </div>
 

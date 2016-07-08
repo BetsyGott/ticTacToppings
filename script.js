@@ -38,9 +38,6 @@ function Game(){
         $(".win-message").html("");
 
         self.currentPlayer.removeCursors;
-        // $("#game-board").removeClass("pepperoni_cursor");
-        // $("#game-board").removeClass("mushroom_cursor");
-        // $("#game-board").removeClass("greenpepper_cursor");
 
         self.currentPlayer.setCursor();
 
@@ -50,17 +47,59 @@ function Game(){
     self.init = function(){
 
         $(".new-game-box").hide();
-        //TODO hide player info boxes to start
+
+        $(".player-container").hide();
         //TODO check if player1 and player2 are null and run the thing where they choose their piece and name if so
 
-        //run function to have people choose players
-        self.initPlayers();
-        
-        //TODO show player info boxes after initPlayers
+        $(".overlay").show();
+        $(".form-container").show();
 
-        self.currentPlayer = self.player1;
-        //set cursor initially with player 1 
-        self.currentPlayer.setCursor();
+
+        $("input[name=topping]").change(function(){
+                if($(this).is(':checked')){
+
+                    console.log("checked: ", $(this).val());
+                    var value = $(this).val();
+                    console.log("value: ", value);
+
+                        $(".radio-img").removeClass("selected-img");
+                        $('#'+value).addClass("selected-img");
+
+
+
+                }
+            });
+
+            $("#submit").click(function(){
+
+                if(!self.player1){
+
+                    self.player1 = self.createPlayerFromFormValues("Player 1", "mushroom", $("#player1-info"));
+
+                    $("#formTitle").text("Player 2");
+
+                    $("#name").val("");
+                    $("input:radio").attr("checked", false);
+                    $(".radio-img").removeClass("selected-img");
+
+
+                } else {
+                    self.player2 = self.createPlayerFromFormValues("Player 2", "pepperoni", $("#player2-info"));
+
+
+                    self.currentPlayer = self.player1;
+                    //set cursor initially with player 1
+                    self.currentPlayer.setCursor();
+                    
+                    $(".overlay").hide();
+                    $(".form-container").hide();
+                    $(".player-container").show();
+
+                    console.log("player2: ", self.player2);
+                }
+
+            });
+
 
         $(".game-cell").on("click",function() {
 
@@ -75,22 +114,28 @@ function Game(){
         
     };
 
+    self.createPlayerFromFormValues = function(defaultName, defaultPiece, playerInfoBox){
+
+            var name = $("#name").val() ? $("#name").val() : defaultName;
+
+            var pieceStr = $("input[name=topping]:checked").val() ? $("input[name=topping]:checked").val() : defaultPiece;
+
+            var pieceConcat = pieceStr + "Piece";
+
+            var piece = self[pieceConcat];
+
+            var player = new Player(this, name, piece, playerInfoBox);
+
+            return player;
+
+    };
+
     
-    self.initPlayers = function(){
-
-        //TODO change this so players choose instead of assigning values here
-        if(!self.player1){
+    self.initPlayer = function(assignment, name, piece, playerInfoBox){
             
-            self.player1 = new Player(this, "Player 1", self.mushroomPiece, $("#player1-info"));
+            assignment = new Player(this, name, piece, playerInfoBox);
 
-        }
-
-        if(!self.player2){
-            
-            self.player2 = new Player(this, "Player 2", self.pepperPiece, $("#player2-info"));
-
-        }
-
+            return assignment;
     };
     
     self.handleBoardClick = function(element){
