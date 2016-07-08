@@ -17,61 +17,62 @@
 
     </head>
 
-    <body>
+  <body>
     <main id="body-main" class="body-main">
-            <div class="container">
-                <section id="form-board" class="form-board">
-                        <div class="form-container1">
-                            <form>
-                                <label class="form-title" for="p1name">Player 1: Please input your name</label><br>
-                                <input class="form-input" id="p1name" type="text" name="p1name"><br>
-                                <label class="form-area"><input type="radio" name="topping" value="pepperoni"> <img class="radio_img" src="assets/images/piece_pepperoni.png"> </label><br>
-                                <label class="form-area"><input type="radio" name="topping" value="mushroom"> <img class="radio_img" src="assets/images/piece_mushroom.png"> </label><br>
-                                <label class="form-area"><input type="radio" name="topping" value="greenpepper"> <img class="radio_img" src="assets/images/piece_green_pepper.png"> </label><br>
-                                <input type="submit" value="submit">
-                            </form>
+        <div class="container">
+
+            <div id="player-board" class="player-board">
+                <header id="body-header" class="body-header">
+                    <div class="game-logo"><img src="assets/images/game-logo.png"></div>
+                    <h1 class="page-title">Tic Tac Toppings</h1>
+                </header>
+                <div class="player-container">
+                    <div id="player1" class="player player-1">player 1</div>
+                    <div id="player2" class="player player-2">player 2</div>
+                    <button id="game-reset" class="button-reset">New Game</button>
+                </div>
+            </div>
+                <div class="game-container">
+                    <div id="game-board" class="game-board">
+                        <div class="game-column">
+                            <div id="game-cell-0" class="game-cell"></div>
+                            <div id="game-cell-1" class="game-cell"></div>
+                            <div id="game-cell-2" class="game-cell"></div>
                         </div>
-                        <div class="form-container2">
-                            <form>
-                                <label class="form-title" for="p2name">Player 2: Please input your name</label><br>
-                                <input class="form-input" id="p2name" type="text" name="p2name"><br>
-                                <label class="form-area"><input type="radio" name="topping" value="pepperoni"> <img class="radio_img" src="assets/images/piece_pepperoni.png"> </label><br>
-                                <label class="form-area"><input type="radio" name="topping" value="mushroom"> <img class="radio_img" src="assets/images/piece_mushroom.png"> </label><br>
-                                <label class="form-area"><input type="radio" name="topping" value="greenpepper"> <img class="radio_img" src="assets/images/piece_green_pepper.png"> </label><br>
-                            </form>
+                        <div class="game-column">
+                            <div id="game-cell-3" class="game-cell"></div>
+                            <div id="game-cell-4" class="game-cell"></div>
+                            <div id="game-cell-5" class="game-cell"></div>
                         </div>
-                </section>
-                <section id="player-board" class="player-board">
-                    <header id="body-header" class="body-header">
-                        <div class="game-logo"><img src="assets/images/game-logo.png"></div>
-                        <h1 class="page-title">Tic Tac Toppings</h1>
-                    </header>
-                    <div class="player-container">
-                        <div id="player1" class="player player-1">player 1</div>
-                        <div id="player2" class="player player-2">player 2</div>
-                        <button id="game-reset" class="button-reset">New Game</button>
+                        <div class="game-column">
+                            <div id="game-cell-6" class="game-cell"></div>
+                            <div id="game-cell-7" class="game-cell"></div>
+                            <div id="game-cell-8" class="game-cell"></div>
+                        </div>
                     </div>
-                </section>
-                <section id="game-board" class="game-board">
-                    <div class="game-column">
-                        <div id="game-cell-0" class="game-cell"></div>
-                        <div id="game-cell-1" class="game-cell"></div>
-                        <div id="game-cell-2" class="game-cell"></div>
-                    </div>
-                    <div class="game-column">
-                        <div id="game-cell-3" class="game-cell"></div>
-                        <div id="game-cell-4" class="game-cell"></div>
-                        <div id="game-cell-5" class="game-cell"></div>
-                    </div>
-                    <div class="game-column">
-                        <div id="game-cell-6" class="game-cell"></div>
-                        <div id="game-cell-7" class="game-cell"></div>
-                        <div id="game-cell-8" class="game-cell"></div>
-                    </div>
-                </section>
+                </div>
             </div>
         </main>
 
+    <div class="overlay"></div>
+    <div class="form-container">
+        <form id="player1-form">
+            <label class="form-title" for="p1name">Player 1: Please input your name</label><br>
+            <input class="form-input" id="p1name" type="text" name="p1name"><br>
+            <label class="form-area"><input type="radio" name="topping" value="pepperoni"> <img class="radio_img" src="assets/images/piece_pepperoni.png"> </label><br>
+            <label class="form-area"><input type="radio" name="topping" value="mushroom"> <img class="radio_img" src="assets/images/piece_mushroom.png"> </label><br>
+            <label class="form-area"><input type="radio" name="topping" value="greenpepper"> <img class="radio_img" src="assets/images/piece_green_pepper.png"> </label><br>
+            <input type="submit" value="submit">
+        </form>
+
+        <form id="player2-form">
+            <label class="form-title" for="p2name">Player 2: Please input your name</label><br>
+            <input class="form-input" id="p2name" type="text" name="p2name"><br>
+            <label class="form-area"><input type="radio" name="topping" value="pepperoni"> <img class="radio_img" src="assets/images/piece_pepperoni.png"> </label><br>
+            <label class="form-area"><input type="radio" name="topping" value="mushroom"> <img class="radio_img" src="assets/images/piece_mushroom.png"> </label><br>
+            <label class="form-area"><input type="radio" name="topping" value="greenpepper"> <img class="radio_img" src="assets/images/piece_green_pepper.png"> </label><br>
+        </form>
+    </div>
     </body>
 
 </html>

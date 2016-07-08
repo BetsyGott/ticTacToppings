@@ -1,6 +1,10 @@
-var canClick = true,
-    playCount = 0,
-    winArray = [
+function Game(){
+    var self = this;
+    self.canClick = true;
+    self.playCount = 0;
+    self.player1 = null;
+    self.player2 = null;
+    self.winArray = [
         [0,1,2],
         [3, 4, 5],
         [6, 7, 8],
@@ -9,39 +13,38 @@ var canClick = true,
         [2,5,8],
         [0,4,8],
         [2,4,6]
-    ],
+    ];
+    
+    self.gameState = localStorage.getItem("gameState");
 
-   mushroomPiece = {
-    name: "mushroom",
-    image: "assets/images/piece_mushroom.png"
-},
-   pepperPiece = {
-    name: "greenPepper",
-    image: "assets/images/piece_green_pepper.png"
-},
-    pepperoniPiece = {
-        name: "pepperoni",
-        image: "assets/images/piece_pepperoni.png"
-    },
-    player1 = {
-        name: "Player 1",
-        piece: mushroomPiece
-    },
-    player2 = {
-        name: "Player 2",
-        piece: pepperoniPiece
-    };
-
-    var gameState = localStorage.getItem("gameState");
-
-    if(!gameState){
-        gameState = {
-        boardState: [null, null, null, null, null, null, null, null, null],
-        currentPlayer: player1
+    if(!self.gameState){
+        self.gameState = {
+            boardState: [null, null, null, null, null, null, null, null, null],
+            currentPlayer: self.player1
         };
     } else{
-        gameState = JSON.parse(gameState);
+        self.gameState = JSON.parse(self.gameState);
     }
+    
+    self.mushroomPiece = {
+        name: "mushroom",
+        image: "assets/images/piece_mushroom.png"
+    };
+    self.pepperPiece = {
+            name: "greenPepper",
+            image: "assets/images/piece_green_pepper.png"
+        };
+    self.pepperoniPiece = {
+            name: "pepperoni",
+            image: "assets/images/piece_pepperoni.png"
+        };
+    
+}
+
+function Player(name, piece){
+    this.name = name;
+    this.piece = piece;
+}
 
 function checkWin(playerPiece){
     var playerArray = [];
