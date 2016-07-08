@@ -13,6 +13,7 @@
         <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
         <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
         <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>-->
+        <script src="bounceText.js"></script>
         <script src="script.js"></script>
 
     </head>
@@ -21,22 +22,27 @@
     <main id="body-main" class="body-main">
         <div class="container">
 
-            <div id="player-board" class="player-board">
-                <header id="body-header" class="body-header">
-                    <div class="game-logo"><img src="assets/images/game-logo.png"></div>
-                    <h1 class="page-title">Tic Tac Toppings</h1>
-                </header>
-                <div class="player-container">
-                    <div id="player1" class="player player-1">player 1</div>
-                    <div id="player2" class="player player-2">player 2</div>
-
-                    <div class="new-game-box">
-                        <div id="game-reset" class="button-reset">New Game</div>
-                    </div>
-
+            <div class="title-board">
+                 <div class="body-header">
+                    <h1 class="page-title rainbow">Tic Tac <span class="bounce-text">Toppings</span></h1>
+                </div>
+                <div class="new-game-box">
+                    <div id="game-reset" class="button-reset">New Game</div>
                 </div>
             </div>
-                <div class="game-container">
+            <div class="player-container">
+                <div id="player1-info">
+                    <h3 class="player-name">Player 1</h3>
+                    <p>Piece: <span class="mushroom-bg"></span></p>
+                    <p>Wins: <span class="wins">0</span></p>
+                </div>
+                <div id="player2-info">
+                    <h3 class="player-name">Player 2</h3>
+                    <p>Piece: <span class=""></span></p>
+                    <p>Wins: <span class="wins">0</span></p>
+                </div>
+            </div>
+            <div class="game-container">
                     <div id="game-board" class="game-board">
                         <div class="game-column">
                             <div id="game-cell-0" class="game-cell"></div>
@@ -91,6 +97,10 @@
             <label class="form-area"><input type="radio" name="topping" value="greenpepper"> <img class="radio_img" src="assets/images/piece_green_pepper.png"> </label><br>
         </form>
     </div>
+
+  <div class="win-message">
+
+  </div>
     </body>
 
 </html>

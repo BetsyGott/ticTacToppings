@@ -33,11 +33,14 @@ function Game(){
             $(this).html("");
         });
 
-        $("#player-board").find("h3").remove();
+        //TODO uncomment hiding after testing
+        // $(".win-message").hide();
+        $(".win-message").html("");
 
-        $("#game-board").removeClass("pepperoni_cursor");
-        $("#game-board").removeClass("mushroom_cursor");
-        $("#game-board").removeClass("greenpepper_cursor");
+        self.currentPlayer.removeCursors;
+        // $("#game-board").removeClass("pepperoni_cursor");
+        // $("#game-board").removeClass("mushroom_cursor");
+        // $("#game-board").removeClass("greenpepper_cursor");
 
         self.currentPlayer.setCursor();
 
@@ -175,8 +178,9 @@ function Player(parent, name, piece){
             if(isWinner === true){
                 this.parent.canClick = false;
                 this.removeCursors();
-                var $h3WinMessage = $("<h3>"+ this.name + " wins!" + "</h3>");
-                $("#player-board").append($h3WinMessage);
+                var $h2WinMessage = $("<h2>"+ this.name + " wins!" + "</h2>");
+                $h2WinMessage.addClass("rainbow");
+                $(".win-message").append($h2WinMessage);
                 $(".new-game-box").show();
             }
         }
@@ -184,8 +188,9 @@ function Player(parent, name, piece){
             //if all cells have been filled and there's no winner, it's a tie
             this.parent.canClick = false;
             this.removeCursors();
-            var $h3TieMessage = $("<h3>" + "game is a tie." + "</h3>");
-            $("#player-board").append($h3TieMessage);
+            var $h2TieMessage = $("<h2>" + "The game is a tie." + "</h2>");
+            $h2TieMessage.addClass("rainbow");
+            $(".win-message").append($h2TieMessage);
             $(".new-game-box").show();
         }
     };
@@ -208,16 +213,11 @@ function Player(parent, name, piece){
 
 $(document).ready(function(){
     
+    createBounce();
+    
     var game = new Game;
     
     //run game init function
     game.init();
-
-
-    //TODO troubleshoot click handler
-    // $(".game-cell").click("click", function() {
-    //
-    //     game.handleBoardClick($(this));
-    // });
     
 });

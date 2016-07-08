@@ -63,7 +63,7 @@ body {
     padding: 3% 0;
 }
 
-.player-board {
+.title-board {
     width: 100%;
     height: 15vh;
     position: absolute;
@@ -102,14 +102,20 @@ h1 {
 
 .player-container div {
     font-size: 130%;
-    margin-right: 10%;
+    background: white;
+    border: 2px solid grey;
+    width: 47%;
+    display: inline-block;
+    box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.3), 2px 2px 2px rgba(0, 0, 0, 0.3) inset;
 }
 
 .player-container {
-    display: flex;
-    width: 40vw;
-    flex-direction: row;
-    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 25%;
+    text-align: center;
 }
 
 .new-game-box {
@@ -132,14 +138,6 @@ div.button-reset {
     font-size: 2em;
     cursor:pointer;
 }
-
-/*.button-reset:hover {*/
-    /*font-family: inherit;*/
-    /*font-size: inherit;*/
-    /*background-color: rgba(255, 255, 255, 0.8);*/
-    /*border: 2px solid black;*/
-    /*padding: 10px 20px;*/
-/*}*/
 
 .game-board {
 
@@ -194,6 +192,19 @@ div.button-reset {
     cursor: url('assets/images/cursor_mushroom.png'), default;
 }
 
+.win-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+}
+
+.win-message {
+    font-size: 5em;
+}
+
 @keyframes bounceIn {
     0% {
         transform: scale(0.1);
@@ -207,3 +218,34 @@ div.button-reset {
         transform: scale(1);
     }
 }
+
+/*Rainbow text css*/
+
+.rainbow {
+    #font-size: 55px;
+    color: rgba(0, 0, 0, 0);
+    text-shadow: 3px 0 0 lightgrey, 6px 0 0 green, 9px 0 0 green, 12px 0 0 white, 15px 0 0 white, 18px 0 0 red, 21px 0 0 red;
+}
+
+.bounce-text em {
+    display: inline-block;
+}
+
+.bounce-text em.bounce-me {
+    -webkit-animation: bounceText 2s infinite ease-in-out;
+    animation: bounceText 2s infinite ease-in-out;
+}
+
+@-webkit-keyframes bounceText {
+    60% {
+        -webkit-transform: translate(0px, -20px);
+    }
+}
+@keyframes bounceText {
+    60% {
+        -webkit-transform: translate(0px, -20px);
+
+    }
+}
+
+/*end rainbow text css*/
