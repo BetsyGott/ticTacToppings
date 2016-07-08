@@ -45,12 +45,40 @@ function Game(){
         $("#game-reset").hide();
     };
     
+    self.init = function(){
+        //TODO check if player1 and player2 are null and run the thing where they choose their piece and name if so
+        
+        //populates the board with localStorage saved values if there are any
+        $(".game-cell").each(function(){
+            //get ID of cell div
+            var $id = $(this).attr("id");
+            var index = $id[$id.length-1];
+
+            if(self.gameState.boardState[index]){
+                var $img = $("<img>").attr("src", self.gameState.boardState[index]);
+                $(this).html($img);
+            }
+        });
+
+        //hide reset game button by default
+        $("#game-reset").hide();
+        
+        //check whether anyone has won (requires initializing players right away)
+        self.player1.checkWin();
+        self.player2.checkWin();
+
+        //set cursor initially with player 1 
+        self.player1.setCursor();
+    };
+    
     self.initGameState = function(){
         var initialGameState = localStorage.getItem("gameState");
 
         if(initialGameState){
             initialGameState = {
                 boardState: [null, null, null, null, null, null, null, null, null],
+                player1: self.player1,
+                player2: self.player2,
                 currentPlayer: self.player1
             };
         } else{
@@ -59,6 +87,11 @@ function Game(){
         
         return initialGameState;
     };
+    
+    self.initPlayers = function(){
+        //TODO init player function, check localStorage for existing players, else set null
+        var initialPlayers ;
+    }
     
 }
 
@@ -125,27 +158,12 @@ function Player(parent, name, piece){
 }
 
 $(document).ready(function(){
+    
+    var game = new Game;
+    
+    //run game init function
 
-    //populates the board with localStorage saved values if there are any
-    $(".game-cell").each(function(){
-        //get ID of cell div
-        var $id = $(this).attr("id");
-        var index = $id[$id.length-1];
-
-        if(gameState.boardState[index]){
-            var $img = $("<img>").attr("src", gameState.boardState[index]);
-            $(this).html($img);
-        }
-    });
-
-    //hide reset game button by default
-    $("#game-reset").hide();
-    checkWin(player1);
-    checkWin(player2);
-
-    //set cursor initially, with player 1 for now
-    setCursor(player1);
-
+    
     //run function to assign piece objects to player objects (run again on new game button click
     $(".game-cell").on("click",function() {
         if (canClick === true) {
@@ -157,7 +175,6 @@ $(document).ready(function(){
         var index = $id[$id.length-1];
 
         if(!gameState.boardState[index]) {
-            console.log(gameState.currentPlayer.piece.image);
             //if the html is empty
             // create an image element with a src equal to current player's piece image
 
@@ -180,7 +197,6 @@ $(document).ready(function(){
                 setCursor(gameState.currentPlayer);
             }
             localStorage.setItem("gameState", JSON.stringify(gameState));
-            console.log(localStorage.getItem("gameState"));
         }
     }
     });
